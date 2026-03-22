@@ -1,1 +1,91 @@
 
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Politicians Counter</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<style>
+
+  body {
+    padding: 0;
+    margin: 0;
+  }
+
+  #container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 120px;
+
+  }
+  h1 {
+    margin-bottom: 0;
+    font-size: 2rem;
+    color: white;
+    padding: 10px 50px;
+    border-radius: 20px;
+    background-color: rgb(27, 44, 83);
+    position: relative;
+    bottom: -3px;
+  }
+
+  h2 {
+    text-align: center;
+    margin-top: 0;
+    min-width: 400px;
+    border: 4px solid rgb(27, 44, 83);
+    background-color: whitesmoke;
+    padding: 16px 50px;
+    border-radius: 40px;
+    font-size: 2.5rem;
+  }
+</style>
+
+<body>
+
+
+  <div id="container">
+    <h1>
+      <%= name %>
+    </h1>
+    <h2 id="counter">
+      <%= value.toLocaleString() %>
+    </h2>
+  </div>
+
+
+  <script>
+    const actualValue = BigInt("<%= value %>"); // value from table
+    const incrementPerTick = 6341958397n; // per 0.1 sec
+    const totalTicks = 30; // 3 seconds / 0.1 sec
+
+    // Calculate the starting value so it reaches actualValue in 3 seconds
+    const startValue = actualValue - (incrementPerTick * BigInt(totalTicks));
+    let currentValue = startValue;
+
+    const counter = document.getElementById("counter");
+
+    function formatNumber(num) {
+      return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    let ticks = 0;
+    const interval = setInterval(() => {
+      currentValue += incrementPerTick;
+      ticks++;
+      counter.innerText = formatNumber(currentValue);
+
+      if (ticks >= totalTicks) {
+        clearInterval(interval);
+        counter.innerText = formatNumber(actualValue); // ensure exact final value
+      }
+    }, 100); // every 0.1 sec
+  </script>
+</body>
+
+</html>
