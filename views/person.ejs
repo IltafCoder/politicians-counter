@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 
@@ -9,7 +8,6 @@
 </head>
 
 <style>
-
   body {
     padding: 0;
     margin: 0;
@@ -23,6 +21,7 @@
     margin-top: 120px;
 
   }
+
   h1 {
     margin-bottom: 0;
     font-size: 2rem;
@@ -61,12 +60,7 @@
 
   <script>
     const actualValue = BigInt("<%= value %>"); // value from table
-    const incrementPerTick = 6341958397n; // per 0.1 sec
-    const totalTicks = 30; // 3 seconds / 0.1 sec
-
-    // Calculate the starting value so it reaches actualValue in 3 seconds
-    const startValue = actualValue - (incrementPerTick * BigInt(totalTicks));
-    let currentValue = startValue;
+    const status = "<%= status %>"; // P or C
 
     const counter = document.getElementById("counter");
 
@@ -74,17 +68,29 @@
       return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 
-    let ticks = 0;
-    const interval = setInterval(() => {
-      currentValue += incrementPerTick;
-      ticks++;
-      counter.innerText = formatNumber(currentValue);
+    // 🔥 IF status is P → NO animation
+    if (status === "P") {
+      counter.innerText = formatNumber(actualValue);
+    } else {
+      // ✅ NORMAL ANIMATION (your original logic)
+      const incrementPerTick = 6341958397n; // per 0.1 sec
+      const totalTicks = 30; // 3 seconds
 
-      if (ticks >= totalTicks) {
-        clearInterval(interval);
-        counter.innerText = formatNumber(actualValue); // ensure exact final value
-      }
-    }, 100); // every 0.1 sec
+      const startValue = actualValue - (incrementPerTick * BigInt(totalTicks));
+      let currentValue = startValue;
+
+      let ticks = 0;
+      const interval = setInterval(() => {
+        currentValue += incrementPerTick;
+        ticks++;
+        counter.innerText = formatNumber(currentValue);
+
+        if (ticks >= totalTicks) {
+          clearInterval(interval);
+          counter.innerText = formatNumber(actualValue); // exact final value
+        }
+      }, 100);
+    }
   </script>
 </body>
 
