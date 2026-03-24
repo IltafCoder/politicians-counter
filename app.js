@@ -20,12 +20,13 @@ app.get("/", (req, res) => {
 app.get("/person", (req, res) => {
   const name = req.query.name;
   const value = Number(req.query.value);
+  const status = req.query.status;
 
   if (!name || !value) {
     return res.send("Invalid data!");
   }
 
-  res.render("person", { name, value });
+  res.render("person", { name, value, status });
 });
 
 // start server
